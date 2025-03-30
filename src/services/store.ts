@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+//import ingredientsReducer from './slices/ingredientsSlice';
 
 import {
   TypedUseSelectorHook,
