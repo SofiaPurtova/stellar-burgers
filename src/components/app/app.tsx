@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-
+import { useSelector, useDispatch } from '../../services/store';
 import {
   ConstructorPage,
   Feed,
@@ -11,7 +11,7 @@ import {
   ProfileOrders,
   NotFound404
 } from '@pages';
-
+import { checkUserAuth } from '../../services/slices/authSlice';
 import '../../index.css';
 import styles from './app.module.css';
 import { AppHeader, Modal, OrderInfo, IngredientDetails } from '@components';
@@ -21,13 +21,21 @@ import { useEffect } from 'react';
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const background = location.state?.background;
 
   // Заглушка для проверки авторизации
-  const isAuth = false;
+  //const isAuth = false;
+  const { isAuthChecked, user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (!isAuthChecked) {
+      dispatch(checkUserAuth());
+    }
+  }, [dispatch, isAuthChecked]);
 
   const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
-    if (!isAuth) {
+    if (!isAuthChecked) {
       navigate('/login', { state: { from: location } });
       return null;
     }
@@ -41,6 +49,7 @@ const App = () => {
         {/* Основные публичные маршруты */}
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
+        <Route path='/ingredients/:id' element={<IngredientDetails />} />
 
         {/* Маршруты авторизации */}
         <Route path='/login' element={<Login />} />
