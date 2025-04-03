@@ -5,25 +5,20 @@ import { updateUser } from '../../services/slices/authSlice';
 
 export const Profile: FC = () => {
   const dispatch = useDispatch();
-  /** TODO: взять переменную из стора 
-  const user = {
-    name: '',
-    email: ''
-  };*/
-
   const { user } = useSelector((state) => state.auth);
   const [formValue, setFormValue] = useState({
     name: user?.name || '',
     email: user?.email || '',
     password: ''
   });
+  const [updateError, setUpdateError] = useState('');
 
   useEffect(() => {
-    setFormValue((prevState) => ({
-      ...prevState,
+    setFormValue({
       name: user?.name || '',
-      email: user?.email || ''
-    }));
+      email: user?.email || '',
+      password: ''
+    });
   }, [user]);
 
   const isFormChanged =
@@ -31,10 +26,7 @@ export const Profile: FC = () => {
     formValue.email !== user?.email ||
     !!formValue.password;
 
-  /*const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
-  };*/
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     dispatch(updateUser(formValue));
   };
@@ -49,10 +41,10 @@ export const Profile: FC = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormValue((prevState) => ({
-      ...prevState,
+    setFormValue({
+      ...formValue,
       [e.target.name]: e.target.value
-    }));
+    });
   };
 
   return (

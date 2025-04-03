@@ -1,17 +1,20 @@
-// services/slices/orderSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { orderBurgerApi } from '@api';
+import { getOrdersApi, orderBurgerApi } from '@api';
 import { TOrder } from '@utils-types';
 
 type TOrderState = {
+  orders: TOrder[];
   orderRequest: boolean;
   orderModalData: TOrder | null;
+  isLoading: boolean;
   error: string | null;
 };
 
 const initialState: TOrderState = {
+  orders: [],
   orderRequest: false,
   orderModalData: null,
+  isLoading: false,
   error: null
 };
 
@@ -22,6 +25,18 @@ export const createOrder = createAsyncThunk(
     try {
       const res = await orderBurgerApi(ingredients);
       return res.order;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const getOrders = createAsyncThunk(
+  'orders/fetchAll',
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await getOrdersApi();
+      return res;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -51,6 +66,21 @@ const orderSlice = createSlice({
       )
       .addCase(createOrder.rejected, (state, action) => {
         state.orderRequest = false;
+        state.error = action.payload as string;
+      })
+      .addCase(getOrders.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
+        getOrders.fulfilled,
+        (state, action: PayloadAction<TOrder[]>) => {
+          state.orders = action.payload;
+          state.isLoading = false;
+        }
+      )
+      .addCase(getOrders.rejected, (state, action) => {
+        state.isLoading = false;
         state.error = action.payload as string;
       });
   }

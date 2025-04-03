@@ -7,9 +7,11 @@ import {
   getUserApi,
   TLoginData,
   TRegisterData,
-  updateUserApi
+  updateUserApi,
+  refreshToken
 } from '@api';
 import { TUser } from '@utils-types';
+import { getCookie, setCookie, deleteCookie } from '../../utils/cookie';
 
 type TAuthState = {
   user: TUser | null;
@@ -29,23 +31,25 @@ export const checkUserAuth = createAsyncThunk(
   'auth/checkUser',
   async (_, { rejectWithValue }) => {
     try {
-      const res = await getUserApi();
-      // Проверяем, что ответ содержит данные пользователя
-      if (!res || !res.user) {
-        throw new Error('Invalid user data received');
+      const accessToken = getCookie('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (!accessToken || !refreshToken) {
+        return rejectWithValue('Токены отсутствуют');
       }
+      const res = await getUserApi();
       return res.user;
     } catch (error) {
-      // Очищаем токены при ошибке
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      // Возвращаем понятное сообщение об ошибке
-      if (error instanceof SyntaxError) {
-        return rejectWithValue('Server returned invalid response');
+      // При ошибке 401 пробуем обновить токен
+      if ((error as { message: string }).message === 'jwt expired') {
+        try {
+          await refreshToken();
+          const res = await getUserApi();
+          return res.user;
+        } catch (refreshError) {
+          return rejectWithValue(refreshError);
+        }
       }
-      return rejectWithValue(
-        error instanceof Error ? error.message : 'Unknown authentication error'
-      );
+      return rejectWithValue(error);
     }
   }
 );
@@ -55,9 +59,11 @@ export const loginUser = createAsyncThunk(
   async (data: TLoginData, { rejectWithValue }) => {
     try {
       const res = await loginUserApi(data);
+      localStorage.setItem('refreshToken', res.refreshToken);
+      setCookie('accessToken', res.accessToken);
       return res.user;
-    } catch (error) {
-      return rejectWithValue(error);
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
@@ -67,25 +73,40 @@ export const registerUser = createAsyncThunk(
   async (data: TRegisterData, { rejectWithValue }) => {
     try {
       const res = await registerUserApi(data);
+      localStorage.setItem('refreshToken', res.refreshToken);
+      setCookie('accessToken', res.accessToken);
       return res.user;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  'auth/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      await logoutApi(); // API-функция для выхода
+      localStorage.removeItem('refreshToken');
+      deleteCookie('accessToken');
+      return true;
     } catch (error) {
       return rejectWithValue(error);
     }
   }
 );
 
-export const logoutUser = createAsyncThunk('auth/logout', async () => {
-  await logoutApi();
-});
-
 export const updateUser = createAsyncThunk(
-  'auth/update',
-  async (userData: Partial<TRegisterData>, { rejectWithValue }) => {
+  'auth/updateUser',
+  async (
+    userData: { name?: string; email?: string; password?: string },
+    { rejectWithValue }
+  ) => {
     try {
       const res = await updateUserApi(userData);
       return res.user;
-    } catch (error) {
-      return rejectWithValue(error);
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
@@ -93,7 +114,11 @@ export const updateUser = createAsyncThunk(
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    setAuthChecked: (state, action: PayloadAction<boolean>) => {
+      state.isAuthChecked = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(checkUserAuth.pending, (state) => {
@@ -126,8 +151,17 @@ const authSlice = createSlice({
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
+        state.isAuthChecked = true;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isAuthChecked = true;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.user = action.payload;
       });
   }
 });
+export const { setAuthChecked } = authSlice.actions;
 
 export const authReducer = authSlice.reducer;

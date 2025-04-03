@@ -14,6 +14,7 @@ export const IngredientDetails: FC = () => {
 
   const dispatch = useDispatch();
   const { ingredients } = useSelector((state) => state.ingredients);
+  const ingredient = ingredients.find((item) => item._id === id);
 
   useEffect(() => {
     if (!currentIngredient && id) {

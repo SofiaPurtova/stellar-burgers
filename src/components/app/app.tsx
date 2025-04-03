@@ -11,11 +11,11 @@ import {
   ProfileOrders,
   NotFound404
 } from '@pages';
-import { checkUserAuth } from '../../services/slices/authSlice';
+import { checkUserAuth, setAuthChecked } from '../../services/slices/authSlice';
 import '../../index.css';
 import styles from './app.module.css';
 import { AppHeader, Modal, OrderInfo, IngredientDetails } from '@components';
-
+import { getCookie, deleteCookie } from '../../utils/cookie';
 import { useEffect } from 'react';
 
 const App = () => {
@@ -23,20 +23,34 @@ const App = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const background = location.state?.background;
+  const from = location.state?.from || '/';
 
   // Заглушка для проверки авторизации
   //const isAuth = false;
   const { isAuthChecked, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (!isAuthChecked) {
-      dispatch(checkUserAuth());
+    const accessToken = getCookie('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    if (accessToken && refreshToken) {
+      dispatch(checkUserAuth())
+        .unwrap()
+        .catch((err) => {
+          console.log('Ошибка проверки аутентификации:', err);
+          // Очищаем токены при ошибке
+          deleteCookie('accessToken');
+          localStorage.removeItem('refreshToken');
+        });
+    } else {
+      // Если токенов нет, помечаем проверку как завершенную
+      dispatch(setAuthChecked(true));
     }
-  }, [dispatch, isAuthChecked]);
+  }, [dispatch]);
 
   const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
-    if (!isAuthChecked) {
-      navigate('/login', { state: { from: location } });
+    if (!user) {
+      navigate('/login', { state: { from: location.pathname } });
       return null;
     }
     return element;

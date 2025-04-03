@@ -17,7 +17,8 @@ export const store = configureStore({
     burgerConstructor: constructorReducer,
     order: orderReducer,
     auth: authReducer,
-    feed: feedReducer
+    feed: feedReducer,
+    orders: orderReducer
   },
   devTools: process.env.NODE_ENV !== 'production'
 });

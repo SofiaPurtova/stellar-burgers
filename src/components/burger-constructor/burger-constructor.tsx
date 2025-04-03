@@ -9,15 +9,6 @@ import { BurgerConstructorUI } from '@ui';
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора 
-  const constructorItems = {
-    bun: {
-      price: 0
-    },
-    ingredients: []
-  };
-  const orderRequest = false;
-  const orderModalData = null;*/
 
   const { bun, ingredients } = useSelector((state) => state.burgerConstructor);
   const { orderRequest, orderModalData } = useSelector((state) => state.order);
@@ -27,7 +18,7 @@ export const BurgerConstructor: FC = () => {
     if (!bun || orderRequest) return;
 
     if (!user) {
-      navigate('/login', { state: { from: location } });
+      navigate('/login', { state: { from: 'constructor' } });
       return;
     }
 
