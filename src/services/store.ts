@@ -4,6 +4,7 @@ import { constructorReducer } from './slices/constructorSlice';
 import { orderReducer } from './slices/orderSlice';
 import { authReducer } from './slices/authSlice';
 import { feedReducer } from './slices/feedSlice';
+import { userOrdersReducer } from './slices/userOrdersSlice';
 
 import {
   TypedUseSelectorHook,
@@ -18,7 +19,8 @@ export const store = configureStore({
     order: orderReducer,
     auth: authReducer,
     feed: feedReducer,
-    orders: orderReducer
+    orders: orderReducer,
+    userOrders: userOrdersReducer
   },
   devTools: process.env.NODE_ENV !== 'production'
 });

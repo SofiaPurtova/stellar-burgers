@@ -43,6 +43,18 @@ export const getOrders = createAsyncThunk(
   }
 );
 
+export const fetchUserOrders = createAsyncThunk(
+  'orders/fetchUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await getOrdersApi();
+      return res;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 const orderSlice = createSlice({
   name: 'order',
   initialState,
@@ -82,6 +94,9 @@ const orderSlice = createSlice({
       .addCase(getOrders.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
+      })
+      .addCase(fetchUserOrders.fulfilled, (state, action) => {
+        state.orders = action.payload;
       });
   }
 });

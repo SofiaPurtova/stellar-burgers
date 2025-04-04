@@ -3,20 +3,25 @@ import { TOrder } from '@utils-types';
 import { FC, useEffect } from 'react';
 import { useSelector, useDispatch } from '../../services/store';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { getOrders } from '../../services/slices/orderSlice';
+import { fetchUserOrders } from '../../services/slices/orderSlice';
+import { Preloader } from '@ui';
 
 export const ProfileOrders: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { orders } = useSelector((state) => state.orders);
-
-  /** TODO: взять переменную из стора
-  const orders: TOrder[] = []; */
+  const { orders, loading } = useSelector((state) => state.userOrders);
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    dispatch(getOrders());
-  }, [dispatch]);
+    if (!user) {
+      navigate('/login', { state: { from: '/profile/orders' } });
+      return;
+    }
+    dispatch(fetchUserOrders());
+  }, [dispatch, navigate, user]);
+
+  if (loading) return <Preloader />;
 
   const handleOrderClick = (order: TOrder) => {
     navigate(`/profile/orders/${order.number}`, {
@@ -24,5 +29,7 @@ export const ProfileOrders: FC = () => {
     });
   };
 
-  return <ProfileOrdersUI orders={orders} />;
+  return (
+    <ProfileOrdersUI orders={orders || []} onOrderClick={handleOrderClick} />
+  );
 };

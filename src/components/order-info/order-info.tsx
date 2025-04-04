@@ -3,20 +3,9 @@ import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useSelector } from '../../services/store';
+import { OrderInfoProps } from './type';
 
-export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора 
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
-
-  const ingredients: TIngredient[] = [];*/
+export const OrderInfo: FC<OrderInfoProps> = ({ order }) => {
   const { orderModalData } = useSelector((state) => state.order);
   const { ingredients } = useSelector((state) => state.ingredients);
 

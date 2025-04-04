@@ -25,8 +25,10 @@ export const fetchFeed = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await getFeedsApi();
+      console.log('Feed data received:', res); // Логируем полученные данные
       return res;
     } catch (error) {
+      console.error('Error fetching feed:', error); // Логируем ошибку
       return rejectWithValue(error);
     }
   }
