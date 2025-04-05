@@ -40,7 +40,7 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({
             <p className='text text_type_main-default ml-2'>Лента заказов</p>
           </button>
         </div>
-        <div className={styles.logo}>
+        <div className={styles.logo} onClick={() => navigate('/')}>
           <Logo className='' />
         </div>
         <button

@@ -9,7 +9,7 @@ import { BurgerConstructorUIProps } from './type';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorElement, Modal } from '@components';
 import { Preloader, OrderDetailsUI } from '@ui';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../../../services/store';
 import {
   moveIngredientUp,
   moveIngredientDown,

@@ -68,7 +68,9 @@ const App = () => {
   }: {
     element: React.ReactElement;
   }) => {
-    const { isAuthChecked, user } = useSelector((state) => state.auth);
+    const { isAuthChecked, user, isLoading } = useSelector(
+      (state) => state.auth
+    );
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -83,6 +85,8 @@ const App = () => {
         });
       }
     }, [isAuthChecked, user, navigate, location]);
+
+    if (isLoading) return <Preloader />;
 
     if (!isAuthChecked) {
       return <Preloader />;
@@ -123,13 +127,9 @@ const App = () => {
           <Route
             path='/feed/:number'
             element={
-              <ProtectedRoute
-                element={
-                  <Modal onClose={() => navigate(-1)} title='Детали заказа'>
-                    {currentOrder && <OrderInfo order={currentOrder} />}
-                  </Modal>
-                }
-              />
+              <Modal onClose={() => navigate(-1)} title='Детали заказа'>
+                {currentOrder && <OrderInfo order={currentOrder} />}
+              </Modal>
             }
           />
           <Route
