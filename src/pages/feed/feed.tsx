@@ -18,8 +18,6 @@ export const Feed: FC = () => {
   );
   //const [selectedOrder, setSelectedOrder] = useState<TOrder | null>(null);
   const selectedOrder = location.state?.order as TOrder | undefined;
-  console.log('Location state:', location.state);
-  console.log('Selected order:', selectedOrder);
 
   const orderByDate = [...orders].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()

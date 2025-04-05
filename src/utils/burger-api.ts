@@ -105,6 +105,7 @@ export const getOrdersApi = () =>
   }).then((data) => {
     if (data?.success) return data.orders;
     return Promise.reject(data);
+    console.log('API response:', data);
   });
 
 type TNewOrderResponse = TServerResponse<{
