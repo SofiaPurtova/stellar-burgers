@@ -6,20 +6,20 @@ import { useSelector } from '../../services/store';
 import { OrderInfoProps } from './type';
 
 export const OrderInfo: FC<OrderInfoProps> = ({ order }) => {
-  const { orderModalData } = useSelector((state) => state.order);
+  //const { orderModalData } = useSelector((state) => state.order);
   const { ingredients } = useSelector((state) => state.ingredients);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
-    if (!orderModalData || !ingredients.length) return null;
+    if (!order || !ingredients.length) return null;
 
-    const date = new Date(orderModalData.createdAt);
+    const date = new Date(order.createdAt);
 
     type TIngredientsWithCount = {
       [key: string]: TIngredient & { count: number };
     };
 
-    const ingredientsInfo = orderModalData.ingredients.reduce(
+    const ingredientsInfo = order.ingredients.reduce(
       (acc: TIngredientsWithCount, item) => {
         if (!acc[item]) {
           const ingredient = ingredients.find((ing) => ing._id === item);
@@ -44,12 +44,12 @@ export const OrderInfo: FC<OrderInfoProps> = ({ order }) => {
     );
 
     return {
-      ...orderModalData,
+      ...order,
       ingredientsInfo,
       date,
       total
     };
-  }, [orderModalData, ingredients]);
+  }, [order, ingredients]);
 
   if (!orderInfo) {
     return <Preloader />;

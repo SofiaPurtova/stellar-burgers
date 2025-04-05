@@ -26,9 +26,15 @@ export const Profile: FC = () => {
     formValue.email !== user?.email ||
     !!formValue.password;
 
-  const handleSubmit = (e: SyntheticEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    dispatch(updateUser(formValue));
+    try {
+      await dispatch(updateUser(formValue)).unwrap();
+      // После успешного обновления сбрасываем пароль
+      setFormValue((prev) => ({ ...prev, password: '' }));
+    } catch (error) {
+      setUpdateError(error as string);
+    }
   };
 
   const handleCancel = (e: SyntheticEvent) => {
@@ -51,6 +57,7 @@ export const Profile: FC = () => {
     <ProfileUI
       formValue={formValue}
       isFormChanged={isFormChanged}
+      updateUserError={updateError}
       handleCancel={handleCancel}
       handleSubmit={handleSubmit}
       handleInputChange={handleInputChange}

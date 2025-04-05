@@ -16,7 +16,10 @@ export const Feed: FC = () => {
   const { orders, total, totalToday, isLoading } = useSelector(
     (state) => state.feed
   );
-  const [selectedOrder, setSelectedOrder] = useState<TOrder | null>(null);
+  //const [selectedOrder, setSelectedOrder] = useState<TOrder | null>(null);
+  const selectedOrder = location.state?.order as TOrder | undefined;
+  console.log('Location state:', location.state);
+  console.log('Selected order:', selectedOrder);
 
   const orderByDate = [...orders].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -35,8 +38,15 @@ export const Feed: FC = () => {
 
   // Обработчик клика по заказу
   const handleOrderClick = (order: TOrder) => {
-    setSelectedOrder(order);
-    navigate(`/feed/${order.number}`, { state: { background: location } });
+    //setSelectedOrder(order);
+
+    navigate(`/feed/${order.number}`, {
+      state: {
+        background: location,
+        order // Передаем весь объект заказа
+      },
+      replace: true // Чтобы не копились записи в истории
+    });
   };
 
   // Закрытие модального окна
@@ -55,7 +65,7 @@ export const Feed: FC = () => {
   return (
     <>
       <FeedUI
-        orderByDate={orderByDate}
+        orderByDate={[...orders].reverse()}
         handleGetFeeds={handleRefresh}
         onOrderClick={handleOrderClick}
       />
@@ -69,7 +79,11 @@ export const Feed: FC = () => {
                 onClose={handleCloseModal}
                 title={`#${selectedOrder?.number}`}
               >
-                {selectedOrder && <OrderInfo order={selectedOrder} />}
+                {selectedOrder ? (
+                  <OrderInfo order={selectedOrder} />
+                ) : (
+                  <Preloader />
+                )}
               </Modal>
             }
           />

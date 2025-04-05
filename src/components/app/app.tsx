@@ -19,6 +19,7 @@ import { getCookie, deleteCookie } from '../../utils/cookie';
 import React, { useEffect, useState } from 'react';
 import { Preloader } from '@ui';
 import { TOrder } from '@utils-types';
+import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 
 type ProtectedRouteProps = {
   element: React.ReactElement;
@@ -29,7 +30,10 @@ const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const background = location.state?.background;
+  const backgroundLocation = location.state && location.state.background;
+  const { ingredients, isLoading: isIngredientsLoading } = useSelector(
+    (state) => state.ingredients
+  );
   const from = location.state?.from || '/';
   const [currentOrder, setCurrentOrder] = useState<TOrder | null>(null);
   // Заглушка для проверки авторизации
@@ -53,6 +57,7 @@ const App = () => {
       // Если токенов нет, помечаем проверку как завершенную
       dispatch(setAuthChecked(true));
     }
+    dispatch(fetchIngredients());
   }, [dispatch]);
 
   const handleOrderClick = (order: TOrder) => {
@@ -98,7 +103,7 @@ const App = () => {
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Routes location={background || location}>
+      <Routes location={backgroundLocation || location}>
         {/* Основные публичные маршруты */}
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
@@ -122,13 +127,14 @@ const App = () => {
         {/* Маршрут для 404 */}
         <Route path='*' element={<NotFound404 />} />
       </Routes>
-      {background && (
+      {backgroundLocation && (
         <Routes>
           <Route
             path='/feed/:number'
             element={
               <Modal onClose={() => navigate(-1)} title='Детали заказа'>
                 {currentOrder && <OrderInfo order={currentOrder} />}
+                <OrderInfo order={location.state?.order} />
               </Modal>
             }
           />
@@ -145,6 +151,7 @@ const App = () => {
             element={
               <Modal onClose={() => navigate(-1)} title='Детали заказа'>
                 {currentOrder && <OrderInfo order={currentOrder} />}
+                <OrderInfo order={location.state?.order} />
               </Modal>
             }
           />

@@ -25,7 +25,10 @@ export const ProfileOrders: FC = () => {
 
   const handleOrderClick = (order: TOrder) => {
     navigate(`/profile/orders/${order.number}`, {
-      state: { background: location }
+      state: {
+        background: location,
+        order
+      }
     });
   };
 
