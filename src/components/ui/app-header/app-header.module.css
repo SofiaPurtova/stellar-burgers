@@ -18,10 +18,15 @@
   display: flex;
   text-decoration: none;
   color: var(--text-inactive-color);
+  background-color: inherit;
+  border: none;
+  cursor: pointer;
 }
 
 .link_active {
   color: var(--text-primary-color);
+  outline: none;
+  border: none;
 }
 
 .link_position_last {
