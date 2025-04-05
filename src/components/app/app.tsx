@@ -35,9 +35,8 @@ const App = () => {
     (state) => state.ingredients
   );
   const from = location.state?.from || '/';
-  const [currentOrder, setCurrentOrder] = useState<TOrder | null>(null);
-  // Заглушка для проверки авторизации
-  //const isAuth = false;
+  //const [currentOrder, setCurrentOrder] = useState<TOrder | null>(null);
+  const currentOrder = location.state?.order;
   const { isAuthChecked, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -61,7 +60,7 @@ const App = () => {
   }, [dispatch]);
 
   const handleOrderClick = (order: TOrder) => {
-    setCurrentOrder(order);
+    //setCurrentOrder(order);
     navigate(`/profile/orders/${order.number}`, {
       state: { background: location }
     });
@@ -133,8 +132,11 @@ const App = () => {
             path='/feed/:number'
             element={
               <Modal onClose={() => navigate(-1)} title='Детали заказа'>
-                {currentOrder && <OrderInfo order={currentOrder} />}
-                <OrderInfo order={location.state?.order} />
+                {location.state?.order ? (
+                  <OrderInfo order={location.state.order} />
+                ) : (
+                  <div>Данные заказа не загружены</div>
+                )}
               </Modal>
             }
           />
@@ -150,8 +152,11 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <Modal onClose={() => navigate(-1)} title='Детали заказа'>
-                {currentOrder && <OrderInfo order={currentOrder} />}
-                <OrderInfo order={location.state?.order} />
+                {location.state?.order ? (
+                  <OrderInfo order={location.state.order} />
+                ) : (
+                  <div>Данные заказа не загружены</div>
+                )}
               </Modal>
             }
           />

@@ -28,10 +28,11 @@ export const ProfileOrders: FC = () => {
   console.log('Loading state:', loading);
 
   const handleOrderClick = (order: TOrder) => {
+    console.log('Passing order to modal:', order);
     navigate(`/profile/orders/${order.number}`, {
       state: {
         background: location,
-        order
+        order: { ...order }
       }
     });
   };

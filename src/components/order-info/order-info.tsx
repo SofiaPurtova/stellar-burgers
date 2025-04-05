@@ -9,6 +9,14 @@ export const OrderInfo: FC<OrderInfoProps> = ({ order }) => {
   //const { orderModalData } = useSelector((state) => state.order);
   const { ingredients } = useSelector((state) => state.ingredients);
 
+  if (!order) {
+    console.error('Order is undefined! Check:', {
+      receivedOrder: order,
+      locationState: window.history.state?.usr
+    });
+    return <div>Ошибка: данные заказа не получены</div>;
+  }
+
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
     if (!order || !ingredients.length) return null;

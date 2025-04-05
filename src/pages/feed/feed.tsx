@@ -30,18 +30,18 @@ export const Feed: FC = () => {
 
   // Обработчик обновления заказов
   const handleRefresh = () => {
-    console.log('Refresh button clicked'); // Добавьте для отладки
+    //console.log('Refresh button clicked'); // Добавьте для отладки
     dispatch(fetchFeed());
   };
 
   // Обработчик клика по заказу
   const handleOrderClick = (order: TOrder) => {
     //setSelectedOrder(order);
-
+    console.log('Passing feed order to modal:', order);
     navigate(`/feed/${order.number}`, {
       state: {
         background: location,
-        order // Передаем весь объект заказа
+        order: { ...order } // Передаем весь объект заказа
       },
       replace: true // Чтобы не копились записи в истории
     });
