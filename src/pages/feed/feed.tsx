@@ -39,10 +39,7 @@ export const Feed: FC = () => {
     //setSelectedOrder(order);
     console.log('Passing feed order to modal:', order);
     navigate(`/feed/${order.number}`, {
-      state: {
-        background: location /*,
-        order: { ...order } // Передаем весь объект заказа*/
-      },
+      state: { background: location },
       replace: true // Чтобы не копились записи в истории
     });
   };
@@ -67,22 +64,6 @@ export const Feed: FC = () => {
         handleGetFeeds={handleRefresh}
         onOrderClick={handleOrderClick}
       />
-
-      {location.state?.background && (
-        <Routes>
-          <Route
-            path='/feed/:number'
-            element={
-              <Modal
-                onClose={handleCloseModal}
-                title={`#${selectedOrder?.number}`}
-              >
-                {selectedOrder ? <OrderInfo /> : <Preloader />}
-              </Modal>
-            }
-          />
-        </Routes>
-      )}
     </>
   );
 };

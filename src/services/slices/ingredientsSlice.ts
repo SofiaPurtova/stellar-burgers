@@ -21,11 +21,9 @@ export const fetchIngredients = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getIngredientsApi();
-      console.log('API Response:', response); // Добавьте лог для отладки
       if (!response) throw new Error('Пустой ответ от сервера');
       return response;
     } catch (error) {
-      console.error('Ошибка загрузки:', error); // Логируем ошибку
       return rejectWithValue(
         error instanceof Error ? error.message : 'Ошибка сервера'
       );

@@ -107,6 +107,7 @@ const App = () => {
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
+        <Route path='/feed/:number' element={<OrderInfo />} />
 
         {/* Маршруты авторизации */}
         <Route path='/login' element={<Login />} />
@@ -132,11 +133,7 @@ const App = () => {
             path='/feed/:number'
             element={
               <Modal onClose={() => navigate(-1)} title='Детали заказа'>
-                {location.state?.order ? (
-                  <OrderInfo />
-                ) : (
-                  <div>Данные заказа не загружены</div>
-                )}
+                {<OrderInfo />}
               </Modal>
             }
           />
