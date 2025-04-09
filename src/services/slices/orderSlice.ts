@@ -1,8 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { getOrdersApi, orderBurgerApi } from '@api';
+import { getOrderByNumberApi, getOrdersApi, orderBurgerApi } from '@api';
 import { TOrder } from '@utils-types';
 
 type TOrderState = {
+  order: TOrder | null;
+  currentOrder: TOrder | null;
   orders: TOrder[];
   orderRequest: boolean;
   orderModalData: TOrder | null;
@@ -11,6 +13,8 @@ type TOrderState = {
 };
 
 const initialState: TOrderState = {
+  order: null,
+  currentOrder: null,
   orders: [],
   orderRequest: false,
   orderModalData: null,
@@ -43,6 +47,18 @@ export const getOrders = createAsyncThunk(
   }
 );
 
+export const getOrderByNumber = createAsyncThunk(
+  'order/getByNumber',
+  async (number: number, { rejectWithValue }) => {
+    try {
+      const response = await getOrderByNumberApi(number);
+      return response.orders[0];
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 export const fetchUserOrders = createAsyncThunk(
   'orders/fetchUser',
   async (_, { rejectWithValue }) => {
@@ -61,6 +77,9 @@ const orderSlice = createSlice({
   reducers: {
     resetOrder: (state) => {
       state.orderModalData = null;
+    },
+    clearCurrentOrder: (state) => {
+      state.currentOrder = null;
     }
   },
   extraReducers: (builder) => {
@@ -97,9 +116,32 @@ const orderSlice = createSlice({
       })
       .addCase(fetchUserOrders.fulfilled, (state, action) => {
         state.orders = action.payload;
+      })
+      .addCase(getOrderByNumber.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
+        getOrderByNumber.fulfilled,
+        (state, action: PayloadAction<TOrder>) => {
+          state.isLoading = false;
+          state.currentOrder = action.payload;
+        }
+      )
+      .addCase(getOrderByNumber.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
       });
+  },
+  selectors: {
+    selectCurrentOrder: (state) => state.currentOrder,
+    selectOrders: (state) => state.orders,
+    selectOrderLoading: (state) => state.isLoading
   }
 });
 
-export const { resetOrder } = orderSlice.actions;
+export const { resetOrder, clearCurrentOrder } = orderSlice.actions;
+export const { selectCurrentOrder, selectOrders, selectOrderLoading } =
+  orderSlice.selectors;
 export const orderReducer = orderSlice.reducer;
+export default orderSlice;

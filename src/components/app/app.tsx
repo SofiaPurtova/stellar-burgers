@@ -133,7 +133,7 @@ const App = () => {
             element={
               <Modal onClose={() => navigate(-1)} title='Детали заказа'>
                 {location.state?.order ? (
-                  <OrderInfo order={location.state.order} />
+                  <OrderInfo />
                 ) : (
                   <div>Данные заказа не загружены</div>
                 )}
@@ -153,7 +153,7 @@ const App = () => {
             element={
               <Modal onClose={() => navigate(-1)} title='Детали заказа'>
                 {location.state?.order ? (
-                  <OrderInfo order={location.state.order} />
+                  <OrderInfo />
                 ) : (
                   <div>Данные заказа не загружены</div>
                 )}

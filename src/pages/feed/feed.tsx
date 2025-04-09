@@ -40,8 +40,8 @@ export const Feed: FC = () => {
     console.log('Passing feed order to modal:', order);
     navigate(`/feed/${order.number}`, {
       state: {
-        background: location,
-        order: { ...order } // Передаем весь объект заказа
+        background: location /*,
+        order: { ...order } // Передаем весь объект заказа*/
       },
       replace: true // Чтобы не копились записи в истории
     });
@@ -77,11 +77,7 @@ export const Feed: FC = () => {
                 onClose={handleCloseModal}
                 title={`#${selectedOrder?.number}`}
               >
-                {selectedOrder ? (
-                  <OrderInfo order={selectedOrder} />
-                ) : (
-                  <Preloader />
-                )}
+                {selectedOrder ? <OrderInfo /> : <Preloader />}
               </Modal>
             }
           />
