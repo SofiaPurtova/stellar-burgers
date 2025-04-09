@@ -23,10 +23,6 @@ export const ProfileOrders: FC = () => {
 
   if (loading) return <Preloader />;
 
-  console.log('User orders:', orders);
-  console.log('User:', user);
-  console.log('Loading state:', loading);
-
   const handleOrderClick = (order: TOrder) => {
     console.log('Passing order to modal:', order);
     navigate(`/profile/orders/${order.number}`, {
