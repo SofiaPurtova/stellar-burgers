@@ -9,8 +9,8 @@ import {
   TRegisterData,
   updateUserApi,
   refreshToken
-} from '@api';
-import { TUser } from '@utils-types';
+} from '../../utils/burger-api';
+import { TUser } from '../../utils/types';
 import { getCookie, setCookie, deleteCookie } from '../../utils/cookie';
 
 type TAuthState = {
@@ -20,7 +20,7 @@ type TAuthState = {
   error: string | null;
 };
 
-const initialState: TAuthState = {
+export const initialState: TAuthState = {
   user: null,
   isAuthChecked: false,
   isLoading: false,
@@ -147,18 +147,29 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.error.message || 'Login failed';
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.isAuthChecked = true;
       })
+      .addCase(registerUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.user = action.payload;
         state.isAuthChecked = true;
       })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Registration failed';
+      })
       .addCase(updateUser.fulfilled, (state, action) => {
         state.user = action.payload;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.error = action.error.message || 'Update failed';
       });
   }
 });
