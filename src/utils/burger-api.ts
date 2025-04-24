@@ -1,7 +1,9 @@
 import { setCookie, getCookie } from './cookie';
 import { TIngredient, TOrder, TOrdersData, TUser } from './types';
 
-const URL = process.env.BURGER_API_URL;
+const URL = process.env.REACT_APP_API_URL || process.env.BURGER_API_URL;
+if (!URL) throw new Error('API URL is not defined in .env');
+//console.log('API URL:', URL);
 
 const checkResponse = <T>(res: Response): Promise<T> =>
   res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
@@ -57,6 +59,12 @@ export const fetchWithRefresh = async <T>(
   }
 };
 
+const checkTokenValidity = () => {
+  const accessToken = getCookie('accessToken');
+  const refreshToken = localStorage.getItem('refreshToken');
+  return !!accessToken && !!refreshToken;
+};
+
 type TIngredientsResponse = TServerResponse<{
   data: TIngredient[];
 }>;
@@ -92,7 +100,7 @@ export const getOrdersApi = () =>
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
-      authorization: getCookie('accessToken')
+      authorization: getCookie('accessToken') || ''
     } as HeadersInit
   }).then((data) => {
     if (data?.success) return data.orders;
@@ -206,12 +214,17 @@ export const resetPasswordApi = (data: { password: string; token: string }) =>
 
 type TUserResponse = TServerResponse<{ user: TUser }>;
 
-export const getUserApi = () =>
-  fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
+export const getUserApi = () => {
+  if (!checkTokenValidity()) {
+    return Promise.reject(new Error('Токены отсутствуют'));
+  }
+
+  return fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
     headers: {
       authorization: getCookie('accessToken')
     } as HeadersInit
   });
+};
 
 export const updateUserApi = (user: Partial<TRegisterData>) =>
   fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {

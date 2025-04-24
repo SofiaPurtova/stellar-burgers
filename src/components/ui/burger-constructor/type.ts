@@ -7,4 +7,8 @@ export type BurgerConstructorUIProps = {
   orderModalData: TOrder | null;
   onOrderClick: () => void;
   closeOrderModal: () => void;
+  /*constructorItems: {
+    bun: TIngredient | null;
+    ingredients: TConstructorIngredient[];
+  }; */
 };

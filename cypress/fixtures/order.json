@@ -1,0 +1,105 @@
+{
+    "success": true,
+    "name": "Краторный минеральный экзо-плантаго spicy метеоритный бургер",
+    "order": {
+        "ingredients": [
+            {
+                "_id": "643d69a5c3f7b9001cfa093c",
+                "name": "Краторная булка N-200i",
+                "type": "bun",
+                "proteins": 80,
+                "fat": 24,
+                "carbohydrates": 53,
+                "calories": 420,
+                "price": 1255,
+                "image": "https://code.s3.yandex.net/react/code/bun-02.png",
+                "image_mobile": "https://code.s3.yandex.net/react/code/bun-02-mobile.png",
+                "image_large": "https://code.s3.yandex.net/react/code/bun-02-large.png",
+                "__v": 0
+            },
+            {
+                "_id": "643d69a5c3f7b9001cfa0942",
+                "name": "Соус Spicy-X",
+                "type": "sauce",
+                "proteins": 30,
+                "fat": 20,
+                "carbohydrates": 40,
+                "calories": 30,
+                "price": 90,
+                "image": "https://code.s3.yandex.net/react/code/sauce-02.png",
+                "image_mobile": "https://code.s3.yandex.net/react/code/sauce-02-mobile.png",
+                "image_large": "https://code.s3.yandex.net/react/code/sauce-02-large.png",
+                "__v": 0
+            },
+            {
+                "_id": "643d69a5c3f7b9001cfa0940",
+                "name": "Говяжий метеорит (отбивная)",
+                "type": "main",
+                "proteins": 800,
+                "fat": 800,
+                "carbohydrates": 300,
+                "calories": 2674,
+                "price": 3000,
+                "image": "https://code.s3.yandex.net/react/code/meat-04.png",
+                "image_mobile": "https://code.s3.yandex.net/react/code/meat-04-mobile.png",
+                "image_large": "https://code.s3.yandex.net/react/code/meat-04-large.png",
+                "__v": 0
+            },
+            {
+                "_id": "643d69a5c3f7b9001cfa0946",
+                "name": "Хрустящие минеральные кольца",
+                "type": "main",
+                "proteins": 808,
+                "fat": 689,
+                "carbohydrates": 609,
+                "calories": 986,
+                "price": 300,
+                "image": "https://code.s3.yandex.net/react/code/mineral_rings.png",
+                "image_mobile": "https://code.s3.yandex.net/react/code/mineral_rings-mobile.png",
+                "image_large": "https://code.s3.yandex.net/react/code/mineral_rings-large.png",
+                "__v": 0
+            },
+            {
+                "_id": "643d69a5c3f7b9001cfa0949",
+                "name": "Мини-салат Экзо-Плантаго",
+                "type": "main",
+                "proteins": 1,
+                "fat": 2,
+                "carbohydrates": 3,
+                "calories": 6,
+                "price": 4400,
+                "image": "https://code.s3.yandex.net/react/code/salad.png",
+                "image_mobile": "https://code.s3.yandex.net/react/code/salad-mobile.png",
+                "image_large": "https://code.s3.yandex.net/react/code/salad-large.png",
+                "__v": 0
+            },
+            {
+                "_id": "643d69a5c3f7b9001cfa093c",
+                "name": "Краторная булка N-200i",
+                "type": "bun",
+                "proteins": 80,
+                "fat": 24,
+                "carbohydrates": 53,
+                "calories": 420,
+                "price": 1255,
+                "image": "https://code.s3.yandex.net/react/code/bun-02.png",
+                "image_mobile": "https://code.s3.yandex.net/react/code/bun-02-mobile.png",
+                "image_large": "https://code.s3.yandex.net/react/code/bun-02-large.png",
+                "__v": 0
+            }
+        ],
+        "_id": "6809218ae8e61d001cec4259",
+        "owner": {
+            "name": "test256",
+            "email": "test256@yandex.ru",
+            "createdAt": "2025-04-03T17:48:13.514Z",
+            "updatedAt": "2025-04-10T11:18:19.628Z"
+        },
+        "status": "done",
+        "name": "Краторный минеральный экзо-плантаго spicy метеоритный бургер",
+        "createdAt": "2025-04-23T17:21:14.085Z",
+        "updatedAt": "2025-04-23T17:21:14.736Z",
+        "number": 75388,
+        "price": 10300
+    }
+}

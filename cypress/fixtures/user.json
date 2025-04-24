@@ -1,0 +1,9 @@
+{
+    "success": true,
+    "accessToken": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWVjOWRkZWEzMjdjMDAxY2YzMjBjYSIsImlhdCI6MTc0NTQyODU5NSwiZXhwIjoxNzQ1NDI5Nzk1fQ.Z13ly0s2Fwq3Toysj2xN93_PDHdPrtBtYYRy0h0RPVE",
+    "refreshToken": "d32fbee09f476f842844abcdb0c38a9dc7cbe6a89e77d3a7e7cb7bbb6b197206dc1cc37be49cafe9",
+    "user": {
+        "email": "test256@yandex.ru",
+        "name": "test256"
+    }
+}

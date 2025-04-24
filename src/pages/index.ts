@@ -7,3 +7,5 @@ export * from './profile';
 export * from './profile-orders';
 export * from './register';
 export * from './reset-password';
+export * from '../components/order-info';
+export * from '../components/ingredient-details';
